@@ -64,9 +64,7 @@ class Promise{
             reject(e);
         }
     }
-    then(onfulfilled,onrejected){ // onfulfilled,onrejected 是两个可选参数 
-        onfulfilled = typeof onfulfilled === 'function'?onfulfilled:val=>val;
-        onrejected = typeof onrejected === 'function'?onrejected:r=>{throw r}
+    then(onfulfilled,onrejected){ 
         let promise2;
         promise2 = new Promise((resolve,reject)=>{
             if(this.status === 'fulfilled'){
@@ -118,15 +116,4 @@ class Promise{
         
     }
 }
-// 暴露一个方法这个方法需要返回一个对象 对象上需要有 promise resolve reject 三个属性
-Promise.defer = Promise.deferred = function(){
-    let dfd = {}
-    dfd.promise = new Promise((resolve,reject)=>{
-        dfd.resolve = resolve;
-        dfd.reject = reject;
-    })
-    return dfd;
-}
-module.exports = Promise; 
-// 全局安装测试工具 sudo npm install promises-aplus-tests -g
-//  promises-aplus-tests 文件名
+module.exports = Promise;
