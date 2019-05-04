@@ -45,6 +45,11 @@ class Promise{
         this.resolveCallbacks = []; // 当then是pending 我希望吧成功的方法都放到数组中
         this.rejectCallbacks = [];
         let resolve = (value)=>{
+            // 如果是promise就调用这个promise的then方法 
+            if(value instanceof Promise){
+                // 不停的解析 等待着解析出一个常量 传递给下面
+                return value.then(resolve,reject);
+            }
             if(this.status == 'pending'){
                 this.status = 'fulfilled';
                 this.value = value;
@@ -114,11 +119,14 @@ class Promise{
                 })
             }
         });
-        return promise2
-        
+        return promise2;
+    }
+    catch(rejectFunc){// catch的实现 
+        return this.then(null,rejectFunc); 
     }
 }
 // 暴露一个方法这个方法需要返回一个对象 对象上需要有 promise resolve reject 三个属性
+// 减少嵌套
 Promise.defer = Promise.deferred = function(){
     let dfd = {}
     dfd.promise = new Promise((resolve,reject)=>{
@@ -126,6 +134,18 @@ Promise.defer = Promise.deferred = function(){
         dfd.reject = reject;
     })
     return dfd;
+}
+// 产生成功的promise
+Promise.resolve = function(value){
+    return new Promise((resolve,reject)=>{
+        resolve(value);
+    })
+}
+// 产生一个失败的promise
+Promise.reject = function(reason){
+    return new Promise((resolve,reject)=>{
+        reject(reason);
+    })
 }
 module.exports = Promise; 
 // 全局安装测试工具 sudo npm install promises-aplus-tests -g
