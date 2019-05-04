@@ -23,3 +23,5 @@ fs.readFile('./age.txt','utf8',function(err,data){ // 3s
 fs.readFile('./age.txt','utf8',function(err,data){ // 3s
     newFn(err,data);
 });
+// compose
+// 发布订阅模式 redux promise
