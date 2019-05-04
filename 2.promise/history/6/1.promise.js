@@ -1,4 +1,3 @@
-
 // let Promise = require('./promise');
 // promisify promise化
 let fs = require('mz/fs');
@@ -36,7 +35,7 @@ Promise.all = function(values){
                     // 就调用这个promise的then方法，把结果和索引对应上,如果任何一个失败了返回的proimise就是一个失败的promise
                     current.then(y=>{
                         processData(y,i);
-                    },reject)
+                    },reject);
                 }else{
                     processData(current,i);
                 }
