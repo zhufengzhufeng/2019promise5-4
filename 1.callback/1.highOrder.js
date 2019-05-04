@@ -1,5 +1,5 @@
 // 判断类型 Object.prototype.toString.call();
-function isType(type,a){ // type  == 'boolean'
+function isType(type){ // type  == 'boolean'
   return function (obj){
     return Object.prototype.toString.call(obj).includes(type);
   }

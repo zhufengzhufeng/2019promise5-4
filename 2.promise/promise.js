@@ -1,35 +1,46 @@
 class Promise{
     constructor(executor){
-        this.status = 'pending'; // 默认当前状态是等待态
-        this.value; // 为什么成功
-        this.reason;// 为什么失败
-        // 表示成功的函数
+        this.status = 'pending'; 
+        this.value; 
+        this.reason;
+        this.resolveCallbacks = []; // 当then是pending 我希望吧成功的方法都放到数组中
+        this.rejectCallbacks = [];
         let resolve = (value)=>{
-            // 只有是等待态的时候 才能更改状态
             if(this.status == 'pending'){
                 this.status = 'fulfilled';
                 this.value = value;
+                this.resolveCallbacks.forEach(fn=>fn()); // 发布
             }
         }
-        // 表示失败的函数
         let reject = (reason)=>{
             if(this.status === 'pending'){
                 this.status = 'rejected';
                 this.reason = reason;
+                this.rejectCallbacks.forEach(fn=>fn())
             }
         }
-        // 默认会调用执行函数
-        executor(resolve,reject);
+        try{
+            executor(resolve,reject);
+        }catch(e){
+            reject(e);
+        }
     }
-    then(onfulfilled,onrejected){ // 成功的回调和失败的回调
-        // 如果状态是成功的时候
+    then(onfulfilled,onrejected){ 
         if(this.status === 'fulfilled'){
             onfulfilled(this.value);
         }
         if(this.status === 'rejected'){
             onrejected(this.reason);
         }
+        if(this.status === 'pending'){
+            // ... 先把成功的回调和失败的回调分开存放
+            this.resolveCallbacks.push(()=>{
+                onfulfilled(this.value)
+            });
+            this.rejectCallbacks.push(()=>{
+                onrejected(this.reason);
+            })
+        }
     }
 }
-
 module.exports = Promise;
