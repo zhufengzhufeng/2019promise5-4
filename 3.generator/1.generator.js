@@ -61,8 +61,7 @@ function * read(){
     return age+b;
 }   
 // let co = require('co');
-
-function co(it){
+function co(it){// express koa
     return new Promise((resolve,reject)=>{
         function next(r){ //如果碰到异步迭代 需要借助一个自执行函数来实现，保证第一次执行后调用下一次执行
             let {value,done} = it.next(r);
@@ -75,7 +74,7 @@ function co(it){
             }
         }
         next();
-    })
+    });
 }
 co(read()).then(data=>{
     console.log(data);
